@@ -1,4 +1,4 @@
-
+﻿
 # coding: utf-8
 
 # In[3]:
@@ -177,7 +177,7 @@ test_s=list(test["count"])
 
 import plotly as py
 import plotly.graph_objs as go
-py.offline.init_notebook_mode()
+ 
 
 trace0 = go.Scatter(
     x= test_x,
@@ -189,7 +189,7 @@ trace0 = go.Scatter(
 )
 
 data = [trace0]
-py.offline.iplot(data, filename='bubblechart-size')
+py.iplot(data, filename='bubblechart-size')
 
 
 # In[29]:
@@ -370,7 +370,7 @@ y
 
 import plotly as py
 import plotly.graph_objs as go
-py.offline.init_notebook_mode()
+
 
 trace0 = go.Scatter(
     x= list(np.array(uyir_count)[:,0]),
@@ -386,7 +386,7 @@ layout = dict(       title = "Bubble chart of frequency of occurrence of Tamil l
 )
 data = [trace0]
 fig = dict(data=data,layout=layout)
-py.offline.iplot(fig, filename='bubblechart-size')
+py.iplot(fig, filename='bubblechart-size')
 
 
 # In[ ]:
@@ -403,7 +403,7 @@ py.offline.iplot(fig, filename='bubblechart-size')
 # see notes below the plot for some key observations
 import plotly as py
 import plotly.graph_objs as go
-py.offline.init_notebook_mode()
+ 
 
 trace0 = go.Scatter(
     x= list(np.array(mey_count)[:,0]),
@@ -419,7 +419,7 @@ layout = dict(       title = "Bubble chart of frequency of occurrence of Tamil l
 )
 data = [trace0]
 fig = dict(data=data,layout=layout)
-py.offline.iplot(fig, filename='bubblechart-size')
+py.iplot(fig, filename='bubblechart-size')
 
 
 # In[ ]:
@@ -437,7 +437,7 @@ py.offline.iplot(fig, filename='bubblechart-size')
 
 import plotly as py
 from plotly.graph_objs import *
-py.offline.init_notebook_mode()
+ 
 
 import pandas as pd
 
@@ -465,7 +465,7 @@ trace1 = Scatter3d(
 data=[trace1]
 layout=dict(height=800, width=800, title="3D Bubble plot of count of Tamil letters of type </br>             'uyirmey' (combination of uyir & mey) in the ancient tamil work Thirukkural")
 fig=dict(data=data, layout=layout)
-py.offline.iplot(fig, filename='3DBubble')
+py.iplot(fig, filename='3DBubble')
 
 
 # In[ ]:
