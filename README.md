@@ -1,7 +1,7 @@
 # kural_analysis_py
 Basic analysis of the ancient Tamil work Thirukkural using Python.
 
-
+NOTE - AFTER YOU READ THROUGH THE INTRODUCTION USE LINK TO VIEW ALL PLOTLY GRAPHS USED IN THE ANALYSIS http://nbviewer.jupyter.org/github/krisrs/kural_analysis_py/blob/7bb3db7f2568c63cbfba7ef272b13cdd6f5c4089/kural_analysis.ipynb
 
 INTRODUCTION
 This analysis is on the ancient Tamil work - Thirukkural
