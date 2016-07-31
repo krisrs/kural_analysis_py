@@ -1,7 +1,7 @@
-﻿
+
 # coding: utf-8
 
-# In[3]:
+# In[67]:
 
 #import required packages
 import numpy as np
@@ -11,19 +11,31 @@ import tamil
 import matplotlib.pyplot as plt
 
 
-# In[4]:
+# In[68]:
 
-# read the file from my git repo
+# INTRODUCTION
+# This analysis is on the ancient Tamil work - Thirukkural
+# Thirukkural, is a set of 1330 couplets written by the saint poet Valluvar - known as Thiruvalluvar, using the writing devices of the time (palm leaves and writing needle)
+# The work has beautiful structure and deep meaning. 
+# Each couplet is an aphorism, a crisp statement on many aspects of life - organized around 3 main themes with a few sections under each theme
+# first theme is around right conduct & principles, the second major theme is about right way of learning & earning a living (from emperors to regular householders), and
+# the third theme is on love - in all its dimensions, from the subtle to the lusty
+# There are 133 subsections - of 10 each, under the major themes and their sections.
+
+
+# In[ ]:
+
+# The first piece of code reads the file containing the enrtire set of Thirukkural from my git repo
 pd_kural = pd.read_csv('https://raw.githubusercontent.com/krisrs/kural_analysis_py/master/kural_dat_utf8.txt',index_col=0,sep=',',header='infer')
 
 
-# In[5]:
+# In[69]:
 
 # creating a list from the pandas dataframe to play around a bit
 kural_list = list(pd_kural["kural"])
 
 
-# In[6]:
+# In[70]:
 
 # Had earlier created uni/bi/trigrams in R using tm package. Though not the main goal here, 
 # just touched a bit using nltk package for python
@@ -31,7 +43,7 @@ ng_test = nltk.ngrams(kural_list[0].split(" "),2)
 for grams in ng_test : print(grams)
 
 
-# In[7]:
+# In[71]:
 
 # Had earlier created uni/bi/trigrams in R using tm package. Though not the main goal here, 
 # just touched a bit using nltk package for python
@@ -43,7 +55,7 @@ for i in range(0,3) :
 print(tri_array)
 
 
-# In[8]:
+# In[72]:
 
 # building a vocabulary of all words in the Thirukkural to get the frequent words
 kural_vocab = []
@@ -52,7 +64,7 @@ for i in range(len(kural_list)) :
     kural_vocab.extend(k)
 
 
-# In[9]:
+# In[73]:
 
 # just tried creating unigram directly in python without using nltk package
 wc=[]
@@ -63,21 +75,21 @@ for i in range(len(kural_vocab)) :
     wc.append([kural_vocab[i],c])
 
 
-# In[10]:
+# In[74]:
 
 # count of vocab - its common knowledge for Tamil folk that each of the 1330 couplets in Thirukkural is approx 7 words each.
 # Just a sniff test to check that consistency.. almost there, though not exact - ok for the high level analysis
 len(wc)
 
 
-# In[11]:
+# In[75]:
 
 # Had put in the unigram words and counts into a dataframe to weed out some of the stems and split words - 
 # In the next few steps, you would see me doing this manually a bit since the stopwords relevant for this is not known as yet
 pd_unicount = pd.DataFrame(data=wc)
 
 
-# In[12]:
+# In[76]:
 
 pd_unicount.head()
 pd_unicount.columns = ["word","count"]
@@ -85,99 +97,98 @@ pd_unicount = pd_unicount.drop_duplicates()
 pd_unicount.head()
 
 
-# In[13]:
+# In[77]:
 
 pd_unicount.describe()
 
 
-# In[14]:
+# In[78]:
 
 pd_unicount.query('count==1912')
 
 
-# In[15]:
+# In[79]:
 
 pd_unicount = pd_unicount[pd_unicount.word != "ம்"]
 pd_unicount.describe()
 
 
-# In[16]:
+# In[80]:
 
 pd_unicount.query('count==1717')
 
 
-# In[17]:
+# In[81]:
 
 pd_unicount = pd_unicount[pd_unicount.word != "ட"]
 pd_unicount.describe()
 
 
-# In[18]:
+# In[82]:
 
 pd_unicount.query('count==1314')
 
 
 
-# In[19]:
+# In[83]:
 
 pd_unicount = pd_unicount[pd_unicount.word != "ர்"]
 pd_unicount.describe()
 
 
-# In[20]:
+# In[84]:
 
 pd_unicount.query('count==736')
 
 
-# In[21]:
+# In[85]:
 
 pd_unicount = pd_unicount[pd_unicount.word != "கு"]
 pd_unicount.describe()
 
 
-# In[22]:
+# In[86]:
 
 pd_unicount.query('count==331')
 
 
-# In[23]:
+# In[87]:
 
 pd_unicount = pd_unicount[pd_unicount.word != "க்கு"]
 pd_unicount.describe()
 
 
-# In[24]:
+# In[88]:
 
 pd_unicount.query('count==233')
 
 
-# In[25]:
+# In[89]:
 
 pd_unisort=pd_unicount.sort_values(by='count',ascending=0)
 pd_unisort.head()
 
 
-# In[26]:
+# In[90]:
 
 # wanted to get a visual feel for a few of the high frequency words 
 test = pd_unisort.query('count>10 and count <=500')
 
 
-# In[27]:
+# In[91]:
 
 test_x=list(test["word"])
 test_y=list(test["count"])
 test_s=list(test["count"])
 
 
-# In[28]:
+# In[92]:
 
 # Simple 2D Bubble plot in Plotly to get a feel for high frequency words in the above range. 
 # That plot look like a Tornado!!
 
-import plotly as py
+import plotly.plotly as py
 import plotly.graph_objs as go
- 
 
 trace0 = go.Scatter(
     x= test_x,
@@ -187,12 +198,13 @@ trace0 = go.Scatter(
         size=test_s,
     )
 )
-
+layout = dict(title = "Plot of high frequency words in the ancient Tamil work Thirukkural </br> (restricted from 50 to 500 occurrences) </br> That looks like a Tornado!")
 data = [trace0]
-py.iplot(data, filename='bubblechart-size')
+fig = dict(data = data,layout = layout)
+py.iplot(fig,filename='kural_high_freq_words_50_to_500')
 
 
-# In[29]:
+# In[93]:
 
 # back to the core - getting the Tamil letter equivalents of vowels & consontants into a list to count their occurrence 
 # Vowel equivalent in Tamil is called 'uyir' - which literally means 'life'
@@ -200,14 +212,14 @@ uyir = ['அ','ஆ','இ','ஈ','உ','ஊ','எ','ஏ','ஐ','ஒ','ஓ','ஔ']
 len(uyir)
 
 
-# In[30]:
+# In[94]:
 
 # Consonant equivalent in Tamil is called 'mey' - which literally means 'body'
 mey = ['க்','ங்','ச்','ஞ்','ட்','ண்','த்','ந்','ப்','ம்','ய்','ர்','ல்','வ்','ழ்','ள்','ற்','ன்']
 len(mey)
 
 
-# In[31]:
+# In[95]:
 
 # unlike in English where vowels and consonants make up the full character set for the language, Tamil has 
 # uyir-mey a 12 x 18 matrix combination of uyir and mey that lend a rich 'body full of life' character set for the language
@@ -218,36 +230,36 @@ uyirmey = ['க','கா','கி','கீ','கு','கூ','கெ','கே',
 len(uyirmey)
 
 
-# In[32]:
+# In[96]:
 
 aydham = ['ஃ']
 
 
-# In[33]:
+# In[97]:
 
 # printed out the first couplet in the list to start counting the letters
 kural_list[0]
 
 
-# In[34]:
+# In[98]:
 
 # counting characters in the first kural - quick visual check shows simple counts uyirmey characters twice,
 # once for their uyir form and again for the mey form
 len(kural_list[0])
 
 
-# In[35]:
+# In[99]:
 
 # this is worked around by using the open-tamil package which has get_letters function that gets the exact letters
 len(tamil.utf8.get_letters(kural_list[0]))
 
 
-# In[36]:
+# In[100]:
 
 tamil.utf8.get_letters(kural_list[0][1])[0] == mey[0]
 
 
-# In[37]:
+# In[101]:
 
 # counting the frequency of occurrence of uyir letters in all 1330 couplets in Thirukkural. 
 # Interesting to note the last vowel 'ஔ' is not used at all
@@ -262,7 +274,7 @@ for u in range(len(uyir)) :
 print(uyir_count)
 
 
-# In[38]:
+# In[102]:
 
 # counting the frequency of occurrence of mey letters in all 1330 couplets in Thirukkural.
 mey_count = []
@@ -275,7 +287,7 @@ for m in range(len(mey)):
 print(mey_count)
 
 
-# In[54]:
+# In[103]:
 
 # getting the count of the singleton 'ஃ'
 ay_count = 0
@@ -285,28 +297,28 @@ for k in range(len(kural_list)):
 ay_count
 
 
-# In[55]:
+# In[104]:
 
 # converting the list of uyirmey letters into a 18 x 12 array 
 umey = np.reshape(np.array(uyirmey),(18,-1))
 
 
-# In[41]:
+# In[105]:
 
 umey
 
 
-# In[42]:
+# In[106]:
 
 len(umey) 
 
 
-# In[43]:
+# In[107]:
 
 np.shape(umey)
 
 
-# In[44]:
+# In[108]:
 
 # while the get_letters function of the open tamil function worked for the mey and uyir separately, it didnt work for uyirmey. 
 # It was treating all 12 combinations of a mey letter with uyir as the same, and hence count of all 
@@ -334,43 +346,42 @@ for m in range(0,18):
         umey_count_all.append([n+1,m+1,uyir[n],mey[m],umey[m][n],all_count])
 
 
-# In[45]:
+# In[109]:
 
 # got the counts for all 216 uyirmey letters - did some sample validations to ensure the double counting problem went away
 len(umey_count_all)
 
 
-# In[46]:
+# In[110]:
 
 umey_count_all[0:5]
 
 
-# In[47]:
+# In[111]:
 
 # got them into a pandas df to use for plotting
 pd_umey_count_all = pd.DataFrame(umey_count_all)
 
 
-# In[48]:
+# In[112]:
 
 pd_umey_count_all.columns = ['u_num','m_num','uyir','mey','uyirmey','count']
 pd_umey_count_all.head()
 
 
-# In[49]:
+# In[113]:
 
 y = np.array(uyir_count)[:,1].astype(np.float)/10
 y
 
 
-# In[50]:
+# In[114]:
 
 # 2d bubble plot of occurrence of the 12 uyir letters bubbles sized & colored by the count of occurrences. 
 # see notes below the plot for some key observations
 
-import plotly as py
+import plotly.plotly as py
 import plotly.graph_objs as go
-
 
 trace0 = go.Scatter(
     x= list(np.array(uyir_count)[:,0]),
@@ -386,10 +397,10 @@ layout = dict(       title = "Bubble chart of frequency of occurrence of Tamil l
 )
 data = [trace0]
 fig = dict(data=data,layout=layout)
-py.iplot(fig, filename='bubblechart-size')
+py.iplot(fig, filename='Thirukkural_Uyir_Freq_2DBubble')
 
 
-# In[ ]:
+# In[115]:
 
 # observations on above plot
 # shows a nice pattern the 'a' (and 'e') sounding forms of uyir letters occur more than the 'aa' (and 'ee') forms 
@@ -397,13 +408,12 @@ py.iplot(fig, filename='bubblechart-size')
 # the last of the uyir letters ஔ is not used at all (surprising as the singleton 'ஃ' is used quite a bit)
 
 
-# In[51]:
+# In[116]:
 
 # 2d bubble plot of occurrence of the 18 uyir letters bubbles sized & colored by the count of occurrences.
 # see notes below the plot for some key observations
-import plotly as py
+import plotly.plotly as py
 import plotly.graph_objs as go
- 
 
 trace0 = go.Scatter(
     x= list(np.array(mey_count)[:,0]),
@@ -419,25 +429,24 @@ layout = dict(       title = "Bubble chart of frequency of occurrence of Tamil l
 )
 data = [trace0]
 fig = dict(data=data,layout=layout)
-py.iplot(fig, filename='bubblechart-size')
+py.iplot(fig, filename='Thirukkural_Mey_Freq_2DBubble')
 
 
-# In[ ]:
+# In[117]:
 
 # Observations on the above plot
 # specific mey letters have a really high frequency of occurrence 
 # going by knowledge of the work, this is largely due to these letters usually occurring as last letter of many words
 
 
-# In[52]:
+# In[118]:
 
 # 3d Bubble plot of occurrence of the 12 x 18 uyirmey letters (combination of uyir & mey) 
 # bubbles sized & colored by the count of occurrences on a specific color scale for visual appeal. 
 # see notes below the plot for some key observations
 
-import plotly as py
+import plotly.plotly as py
 from plotly.graph_objs import *
- 
 
 import pandas as pd
 
@@ -465,10 +474,10 @@ trace1 = Scatter3d(
 data=[trace1]
 layout=dict(height=800, width=800, title="3D Bubble plot of count of Tamil letters of type </br>             'uyirmey' (combination of uyir & mey) in the ancient tamil work Thirukkural")
 fig=dict(data=data, layout=layout)
-py.iplot(fig, filename='3DBubble')
+py.iplot(fig, filename='Thirukkural_UyirMey_Freq_3DBubble')
 
 
-# In[ ]:
+# In[119]:
 
 # flip the plot on all 3 axes to get a better feel..
 # this shows a pattern different from the 2D mey plot 
